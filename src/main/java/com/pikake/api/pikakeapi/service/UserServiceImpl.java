@@ -67,13 +67,14 @@ public class UserServiceImpl {
     private final PasswordEncoder passwordEncoder;
     public User login(AuthenticationRequest user) throws Exception {
         UserEntity userEntity = new UserEntity();
-        BeanUtils.copyProperties(user, userEntity);
+        userEntity.setUsername(user.getUsername());
         try{
-            userRepository.findByUsername(userEntity.getUsername());
+            userEntity = userRepository.findByUsername(userEntity.getUsername());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
+        System.out.println("user entity password is - " + userEntity.getPassword());
+        System.out.println("user passwod is - " + CharBuffer.wrap(user.getPassword()));
         if (passwordEncoder.matches(CharBuffer.wrap(user.getPassword()), userEntity.getPassword())) {
 //            return userMapper.toUserDto(user);
             User user1 = new User();
